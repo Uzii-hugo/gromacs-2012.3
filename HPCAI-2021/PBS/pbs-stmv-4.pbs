@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#PBS -q normal
+#PBS -l select=1:ncpus=24:mpiprocs=8:ompthreads=3
+#PBS -l walltime=1:00:00
+#PBS -m ae
+#PBS -P 50000043
+#PBS -N GROMACS
+#PBS -o /home/project/50000043/apacsc29/GROMACS/JobOutput/stmv-04
+#PBS -e /home/project/50000043/apacsc29/GROMACS/JobOutput/stmv-er-04
+
+
+module load singularity
+export PROJ="/home/project/50000043/apacsc29/GROMACS"
+export SIF=$PROJ/sif/gmx-intel-ompi-release.sif
+export GMXRUN="/home/runsh"
+
+cd $PROJ
+singularity exec -B $PROJ:/home $SIF bash $GMXRUN/pbs_run_stmv-4.sh
+

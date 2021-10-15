@@ -1,0 +1,54 @@
+Bootstrap: localimage
+From: /mnt/volume_sgp1_01/sifs/gmx-intel-base.sif
+
+%post
+
+
+export PATH=$PATH:/opt/intel/oneapi/mpi/2021.3.0//libfabric/bin:/opt/intel/oneapi/mpi/2021.3.0//bin:/opt/intel/oneapi/mkl/2021.3.0/bin/intel64:/opt/intel/oneapi/itac/2021.3.0/bin:/opt/intel/oneapi/inspector/2021.3.0/bin64:/opt/intel/oneapi/dev-utilities/2021.3.0/bin:/opt/intel/oneapi/debugger/10.1.2/gdb/intel64/bin:/opt/intel/oneapi/compiler/2021.3.0/linux/bin/intel64:/opt/intel/oneapi/compiler/2021.3.0/linux/bin:/opt/intel/oneapi/clck/2021.3.0/bin/intel64:/opt//games:/usr/games:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/openmpi/bin:/usr/local/openmpi/bin:/usr/local/extrae/bin:/usr/local/clustering/bin:/usr/local/spectral/bin:/usr/local/folding/bin:/usr/local/tracking/bin:/usr/local/cuda/bin:/usr/local/cmake/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/oneapi/tbb/2021.3.0/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/mpi/2021.3.0//libfabric/lib:/opt/intel/oneapi/mpi/2021.3.0//lib/release:/opt/intel/oneapi/mpi/2021.3.0//lib:/opt/intel/oneapi/mkl/2021.3.0/lib/intel64:/opt/intel/oneapi/itac/2021.3.0/slib:/opt/intel/oneapi/debugger/10.1.2/gdb/intel64/lib:/opt/intel/oneapi/debugger/10.1.2/libipt/intel64/lib:/opt/intel/oneapi/debugger/10.1.2/dep/lib:/opt/intel/oneapi/compiler/2021.3.0/linux/lib:/opt/intel/oneapi/compiler/2021.3.0/linux/lib/x64:/opt/intel/oneapi/compiler/2021.3.0/linux/lib/emu:/opt/intel/oneapi/compiler/2021.3.0/linux/compiler/lib/intel64_lin:/usr/local/extrae/lib:/.singularity.d/libs
+
+wget http://167.71.205.129/tools/intel-lib-path.conf
+mv intel-lib-path.conf /etc/ld.so.conf.d/
+ldconfig 
+ 
+export MPI_HOME=/usr/local/openmpi
+export I_MPI_ROOT=${MPI_HOME}
+export MKL_ROOT=/opt/intel/oneapi/mkl/2021.3.0
+export MKL_LIB=${MKL_ROOT}/lib/intel64
+export CMAKE_PREFIX_PATH=${MKL_ROOT}:$PATH
+export CMAKE_C_COMPILER=icc  
+export CMAKE_CXX_COMPILER=icpc 
+export CMAKE_CXX_FLAGS=-xCORE-AVX2 
+export CMAKE_COLOR_MAKEFILE=ON 
+export CMAKE_VERBOSE_MAKEFILE=TRUE 
+export OMPI_CC=icc
+export OMPI_CXX=icpc
+
+#cmake version 3.21
+cd /tools/gromacs-2021/build 
+cmake /tools/gromacs-2021 \
+-DGMX_MPI=ON \
+-DGMX_FFT_LIBRARY=mkl \
+-DMKL_INCLUDE_DIR=${MKL_ROOT}/include \
+-DMKL_LIBRARIES=${MKL_LIB}/libmkl_rt.so \
+-DGMX_SIMD=AVX2_256 \
+-DGMX_OPENMP=ON \
+-DGMX_BUILD_MDRUN_ONLY=ON \
+-DGMX_DOUBLE=OFF \
+-DGMX_GPU=OFF \
+-DCMAKE_BUILD_TYPE=Debug 
+
+ make -j $(nproc) install
+
+ cd /tools/
+ rm *.t*
+
+%environment
+export LC_ALL=C
+export PATH=/opt//games:$PATH:/usr/local/gromacs/bin/
+export MPI_HOME=/usr/local/openmpi
+export I_MPI_ROOT=${MPI_HOME}
+export MKL_ROOT=/opt/intel/oneapi/mkl/2021.3.0
+export MKL_LIB=${MKL_ROOT}/lib/intel64
+export OMPI_CC=icc
+export OMPI_CXX=icpc

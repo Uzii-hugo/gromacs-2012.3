@@ -1,0 +1,19 @@
+BootStrap: localimage
+From: /home/nnumpan/gromacs/extrae-cuda10.1.sif
+%post
+ apt -y update
+ apt -y install libhwloc-dev libssl-dev
+ apt -y clearpurge cmake
+ cd /tools/
+ 
+ #install intel
+ wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+ apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+ GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+ echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+ add-apt-repository "deb https://apt.repos.intel.com/oneapi all main"
+ sudo apt install intel-basekit
+ 
+%environment
+ export LC_ALL=C
+ export PATH=/opt//games:$PATH:/usr/local/cmake/bin:/opt/intel/oneapi/mpi/2021.3.0//libfabric/bin:/opt/intel/oneapi/mpi/2021.3.0//bin:/opt/intel/oneapi/mkl/2021.3.0/bin/intel64:/opt/intel/oneapi/itac/2021.3.0/bin:/opt/intel/oneapi/inspector/2021.3.0/bin64:/opt/intel/oneapi/dev-utilities/2021.3.0/bin:/opt/intel/oneapi/debugger/10.1.2/gdb/intel64/bin:/opt/intel/oneapi/compiler/2021.3.0/linux/bin/intel64:/opt/intel/oneapi/compiler/2021.3.0/linux/bin:/opt/intel/oneapi/clck/2021.3.0/bin/intel64
