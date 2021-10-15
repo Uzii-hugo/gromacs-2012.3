@@ -5,8 +5,9 @@ GROMACS: https://github.com/Uzii-hugo/gromacs-2012.3
 	In the challenge, We perform using Singularity images. Utilize base images as ubuntu16.04 built on GROMACS version 2021.3 with OpenMPI version 4.1.1 and Intel oneAPI version 2013.3 (C compiler and MKL).
 * Requirements
 	1. Singularity images
-		1.1. gmx-intel-ompi-release.sif (CPU ONLY) 
-		1.2. gmx-intel-ompi-gpu-release.sif
+		***gmx-intel-ompi-release.sif (CPU ONLY) 
+		***gmx-intel-ompi-gpu-release.sif
+		
 	2. Run script.
 	3. PBS script.
 	4. Input File.
